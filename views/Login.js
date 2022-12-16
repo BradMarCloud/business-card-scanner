@@ -43,7 +43,7 @@ export default function Login({ navigation }) {
     if (loginError) {
       console.error(loginError);
     }
-
+// 
     if (result.data) {
       console.log(result.data);
     }
