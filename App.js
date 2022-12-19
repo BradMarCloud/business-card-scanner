@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
 import Navigation from "./components/navigation/Navigation";
+import { Provider } from "react-redux";
 
 const client = new ApolloClient({
   uri: "https://marcloudtechnologies.herokuapp.com/graphql",
@@ -12,7 +13,9 @@ const client = new ApolloClient({
 export default function App() {
   return (
     <ApolloProvider client={client}>
-      <Navigation />
+      <Provider store={store}>
+        <Navigation />
+      </Provider>
     </ApolloProvider>
   );
 }
