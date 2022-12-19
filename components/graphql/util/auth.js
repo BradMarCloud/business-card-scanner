@@ -1,10 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import jwtDecode from "jwt-decode";
+import jwt_Decode from "jwt-decode";
 
 export const auth = {
   async getProfile() {
     const token = await this.getToken();
-    let decodedToken = jwtDecode(token);
+    let decodedToken = jwt_Decode(token);
     return decodedToken;
   },
   async loggedIn() {
@@ -13,7 +13,7 @@ export const auth = {
     return token && !tokenExpired ? true : false;
   },
   async isTokenExpired(token) {
-    const decodedToken = jwtDecode(token);
+    const decodedToken = jwt_Decode(token);
     if (decodedToken.exp > Date.now() / 1000) {
       await AsyncStorage.removeItem("id_token");
       return true;
@@ -24,9 +24,9 @@ export const auth = {
     return await AsyncStorage.getItem("id_token");
   },
   async login(token) {
-    await AsyncStorage.setItem("id_token", token);
+    return await AsyncStorage.setItem("id_token", token);
   },
   async logout() {
-    await AsyncStorage.removeItem("id_token");
+    return await AsyncStorage.removeItem("id_token");
   },
 };
