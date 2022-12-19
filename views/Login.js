@@ -1,9 +1,12 @@
 import { View, Text, TextInput, Button } from "react-native";
 import { useState } from "react";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery, makeVar, useReactiveVar } from "@apollo/client";
 import { auth } from "../components/graphql/util/auth";
 import { MUTATION_Login_User } from "../components/graphql/mutations/mutations";
 import { QUERY_CheckUser } from "../components/graphql/queries/queries";
+
+export const userDetailsVar = makeVar({});
+export const accessTokenVar = makeVar("");
 
 export default function Login({ navigation }) {
   const [userDetails, setUserDetails] = useState({});
@@ -43,12 +46,22 @@ export default function Login({ navigation }) {
     if (loginError) {
       console.error(loginError);
     }
-// 
+    //
     if (result.data) {
       console.log(result.data);
     }
 
     await auth.login(result.data.user.token);
+
+    console.warn("****");
+    console.log(loginData);
+
+    if (!loginData.user) {
+      console.error("No user found");
+      return;
+    }
+
+    navigation.navigate("Scan");
   }
 
   return (
