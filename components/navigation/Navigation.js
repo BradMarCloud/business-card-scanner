@@ -5,7 +5,7 @@ import Scan from "../../views/Scan";
 
 const Stack = createNativeStackNavigator();
 
-export default function Navigation() {
+function Navigation() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
@@ -15,3 +15,5 @@ export default function Navigation() {
     </NavigationContainer>
   );
 }
+
+export default Navigation;

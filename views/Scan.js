@@ -6,7 +6,7 @@ import { userDetailsVar, accessTokenVar } from "../views/Login";
 export default function Scan({ navigation }) {
   const USER_DETAILS = useReactiveVar(userDetailsVar);
 
-  console.log(item);
+  // console.log(USER_DETAILS);
 
   return (
     <View>
