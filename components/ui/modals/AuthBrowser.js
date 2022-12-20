@@ -1,7 +1,12 @@
 import { Modal, StyleSheet, View } from "react-native";
 import { WebView } from "react-native-webview";
 
-export default function AuthBrowser({ browserVisible, browserOpen, browserDetails, continueFunction }) {
+export default function AuthBrowser({
+  browserVisible,
+  browserOpen,
+  browserDetails,
+  continueFunction,
+}) {
   if (!browserDetails) {
     return;
   }
@@ -26,9 +31,9 @@ export default function AuthBrowser({ browserVisible, browserOpen, browserDetail
       return;
     }
 
-    console.log("HERE I AM");
-
-    if (url.includes("https://marcloudtechnologies.herokuapp.com/sfauth?code")) {
+    if (
+      url.includes("https://marcloudtechnologies.herokuapp.com/sfauth?code")
+    ) {
       sleep(3000);
       browserOpen();
       continueFunction();
@@ -36,9 +41,17 @@ export default function AuthBrowser({ browserVisible, browserOpen, browserDetail
   }
 
   return (
-    <Modal animationType="slide" visible={browserVisible} onRequestClose={browserOpen} transparent={true}>
+    <Modal
+      animationType="slide"
+      visible={browserVisible}
+      onRequestClose={browserOpen}
+      transparent={true}
+    >
       <View style={styles.view}>
-        <WebView source={{ uri: uri }} onNavigationStateChange={(ref) => webViewNavigationChange(ref)} />
+        <WebView
+          source={{ uri: uri }}
+          onNavigationStateChange={(ref) => webViewNavigationChange(ref)}
+        />
       </View>
     </Modal>
   );
