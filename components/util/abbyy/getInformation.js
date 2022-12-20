@@ -1,4 +1,5 @@
 import axios from "axios";
+import xml2js from "../helpers/xml2js";
 
 export default async function getInformation(taskId) {
   function sleep(miliseconds) {
@@ -18,7 +19,8 @@ export default async function getInformation(taskId) {
   async function makeCall() {
     try {
       const abbyyInformation = await axios(abbyyInformationConfig);
-      return abbyyInformation;
+      const js = await xml2js(abbyyInformation.data);
+      return js;
     } catch (error) {
       console.error(error);
       return error;
@@ -26,15 +28,14 @@ export default async function getInformation(taskId) {
   }
 
   let prospectInformation = await makeCall();
-  console.log(prospectInformation);
+  console.log(prospectInformation.response.task[0].$.status);
 
   let count = 10;
   let time = 500;
   while (prospectInformation.response.task[0].$.status !== "Completed" && count > 0) {
-    count--; // Must include this to prevent an infinite loop
-    sleep(time); // gives time for the async in the fnct to complete
+    count--;
+    sleep(time);
     time += 500;
-    // console.log("repeat");
     prospectInformation = await makeCall();
   }
 
@@ -43,6 +44,8 @@ export default async function getInformation(taskId) {
     return;
   }
 
-  console.log(prospectInformation);
+  count = 10;
+
+  console.log(prospectInformation.response.task[0].$.status);
   return prospectInformation;
 }
