@@ -47,5 +47,5 @@ export default async function getInformation(taskId) {
   count = 10;
 
   console.log(prospectInformation.response.task[0].$.status);
-  return prospectInformation;
+  return prospectInformation.response.task[0];
 }
