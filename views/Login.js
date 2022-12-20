@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Button } from "react-native";
+import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, makeVar, useReactiveVar } from "@apollo/client";
 import { loggingIn } from "../components/graphql/util/auth";
@@ -51,12 +51,7 @@ export default function Login({ navigation }) {
         username: userDetails.username,
         domainName: userDetails.domain,
       },
-    }).catch((e) => {
-      console.error(e);
-      return;
     });
-
-    // console.log(loginData);
 
     if (!loginData.user.user.code) {
       console.error("No user found");
@@ -78,9 +73,7 @@ export default function Login({ navigation }) {
         },
       };
 
-      const idUser = await axios(userMatchConfig).catch((e) =>
-        console.error(e)
-      );
+      const idUser = await axios(userMatchConfig).catch((e) => console.error(e));
       // console.log(idUser.data);
 
       if (idUser.data.username === userDetails.username) {
@@ -98,9 +91,9 @@ export default function Login({ navigation }) {
     let dataToSend = qs.stringify({
       grant_type: "authorization_code",
       code: loginData.user.user.code,
-      client_id: loginData.user.accountAppInfo.credentials.clientId,
-      client_secret: loginData.user.accountAppInfo.credentials.clientSecret,
-      redirect_uri: loginData.user.accountAppInfo.credentials.redirectUrl,
+      client_id: loginData.user.credentials.clientId,
+      client_secret: loginData.user.credentials.clientSecret,
+      redirect_uri: loginData.user.credentials.redirectUrl,
     });
 
     let sfAccessTokenConfig = {
@@ -112,9 +105,7 @@ export default function Login({ navigation }) {
       data: dataToSend,
     };
 
-    let result = await axios(sfAccessTokenConfig).catch((error) =>
-      console.warn(error)
-    );
+    let result = await axios(sfAccessTokenConfig).catch((error) => console.warn(error));
 
     if (!result || !result.data) {
       console.warn("No data returned");
@@ -123,10 +114,7 @@ export default function Login({ navigation }) {
 
     accessTokenVar(result.data.access_token);
 
-    let doesUserMatch = await userMatch(
-      result.data.access_token,
-      result.data.id
-    );
+    let doesUserMatch = await userMatch(result.data.access_token, result.data.id);
 
     if (!doesUserMatch) {
       console.error("User logged into app does not match Salesforce user.");
@@ -153,22 +141,30 @@ export default function Login({ navigation }) {
         continueFunction={continueFunction}
       />
       <TextInput
+        style={styles.input}
         placeholder="Username"
         value={userDetails.username || ""}
-        onChangeText={(username) =>
-          setUserDetails({ ...userDetails, username: username })
-        }
+        onChangeText={(username) => setUserDetails({ ...userDetails, username: username })}
         autoCapitalize={false}
       />
       <TextInput
+        style={styles.input}
         placeholder="Domain"
         value={userDetails.domain || ""}
-        onChangeText={(domain) =>
-          setUserDetails({ ...userDetails, domain: domain })
-        }
+        onChangeText={(domain) => setUserDetails({ ...userDetails, domain: domain })}
         autoCapitalize={false}
       />
       <Button title="Login" onPress={loginHandler} />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  input: {
+    height: 60,
+    margin: 10,
+    padding: 15,
+    borderWidth: 1,
+    borderRadius: 8,
+  },
+});
