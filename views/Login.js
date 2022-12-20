@@ -21,7 +21,6 @@ export default function Login({ navigation }) {
   const {
     data: userData,
     error: userError,
-    loading: userLoading,
     refetch,
   } = useQuery(QUERY_CheckUser, {
     variables: {
@@ -47,7 +46,10 @@ export default function Login({ navigation }) {
 
   async function continueFunction() {
     const { data: loginData } = await login({
-      variables: { username: userDetails.username, domainName: userDetails.domain },
+      variables: {
+        username: userDetails.username,
+        domainName: userDetails.domain,
+      },
     }).catch((e) => {
       console.error(e);
       return;
@@ -72,7 +74,9 @@ export default function Login({ navigation }) {
         },
       };
 
-      const idUser = await axios(userMatchConfig).catch((e) => console.error(e));
+      const idUser = await axios(userMatchConfig).catch((e) =>
+        console.error(e)
+      );
       console.log(idUser.data);
 
       if (idUser.data.username === userDetails.username) {
@@ -104,7 +108,9 @@ export default function Login({ navigation }) {
       data: dataToSend,
     };
 
-    let result = await axios(sfAccessTokenConfig).catch((error) => console.warn(error));
+    let result = await axios(sfAccessTokenConfig).catch((error) =>
+      console.warn(error)
+    );
 
     if (!result || !result.data) {
       console.warn("No data returned");
@@ -112,10 +118,13 @@ export default function Login({ navigation }) {
     }
 
     console.log("*** SF DATA ***");
-    console.log(result.data);
+    console.log("Access Token: " + result.data.access_token);
     accessTokenVar(result.data.access_token);
 
-    let doesUserMatch = await userMatch(result.data.access_token, result.data.id);
+    let doesUserMatch = await userMatch(
+      result.data.access_token,
+      result.data.id
+    );
 
     if (!doesUserMatch) {
       console.error("User logged into app does not match Salesforce user.");
@@ -143,20 +152,26 @@ export default function Login({ navigation }) {
     <View>
       <AuthBrowser
         browserVisible={authBrowserVisible}
-        browserOpen={browserOpen}
+        browserOpen={() => {
+          setAuthBrowserVisible(!authBrowserVisible);
+        }}
         browserDetails={browserDetails}
         continueFunction={continueFunction}
       />
       <TextInput
         placeholder="Username"
         value={userDetails.username || ""}
-        onChangeText={(username) => setUserDetails({ ...userDetails, username: username })}
+        onChangeText={(username) =>
+          setUserDetails({ ...userDetails, username: username })
+        }
         autoCapitalize={false}
       />
       <TextInput
         placeholder="Domain"
         value={userDetails.domain || ""}
-        onChangeText={(domain) => setUserDetails({ ...userDetails, domain: domain })}
+        onChangeText={(domain) =>
+          setUserDetails({ ...userDetails, domain: domain })
+        }
         autoCapitalize={false}
       />
       <Button title="Login" onPress={loginHandler} />
