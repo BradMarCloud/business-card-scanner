@@ -1,12 +1,13 @@
 import { View, Text, TextInput, Button } from "react-native";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, makeVar, useReactiveVar } from "@apollo/client";
-import { auth } from "../components/graphql/util/auth";
+import { loggingIn } from "../components/graphql/util/auth";
 import { MUTATION_Login_User } from "../components/graphql/mutations/mutations";
 import { QUERY_CheckUser } from "../components/graphql/queries/queries";
 import AuthBrowser from "../components/ui/modals/AuthBrowser";
 import qs from "qs";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const userDetailsVar = makeVar({});
 export const accessTokenVar = makeVar("");
@@ -62,8 +63,11 @@ export default function Login({ navigation }) {
       return;
     }
 
+    const token = loginData.user.token;
+
+    await loggingIn(token);
+
     userDetailsVar(loginData.user);
-    await auth.login(loginData.user.token);
 
     async function userMatch(accessToken, id) {
       let userMatchConfig = {
@@ -77,7 +81,7 @@ export default function Login({ navigation }) {
       const idUser = await axios(userMatchConfig).catch((e) =>
         console.error(e)
       );
-      console.log(idUser.data);
+      // console.log(idUser.data);
 
       if (idUser.data.username === userDetails.username) {
         return true;
@@ -117,8 +121,6 @@ export default function Login({ navigation }) {
       return;
     }
 
-    console.log("*** SF DATA ***");
-    console.log("Access Token: " + result.data.access_token);
     accessTokenVar(result.data.access_token);
 
     let doesUserMatch = await userMatch(
@@ -139,14 +141,6 @@ export default function Login({ navigation }) {
     domain: userDetails.domain,
     clientId: userData ? userData.checkUser.clientId : null,
   };
-
-  function browserOpen() {
-    if (authBrowserVisible) {
-      setAuthBrowserVisible(false);
-    } else {
-      setAuthBrowserVisible(true);
-    }
-  }
 
   return (
     <View>
