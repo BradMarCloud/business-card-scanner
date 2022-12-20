@@ -2,6 +2,7 @@ import { useState } from "react";
 import { View, Text, Image } from "react-native";
 import getInformation from "../components/util/abbyy/getInformation";
 import postImage from "../components/util/abbyy/postImage";
+import downloadFile from "../components/util/helpers/downloadFile";
 
 export default function ProspectInformation({ navigation, route }) {
   const { imageInformation } = route.params;
@@ -14,8 +15,10 @@ export default function ProspectInformation({ navigation, route }) {
     const taskId = await postImage(imageInformation);
     console.log(taskId);
 
-    const prospectInformation = await getInformation(taskId);
-    // console.log(prospectInformation);
+    const abbyyResponse = await getInformation(taskId);
+    console.log(abbyyResponse);
+
+    const downloadedFile = await downloadFile(abbyyResponse.$.resultUrl);
   }
 
   return (
