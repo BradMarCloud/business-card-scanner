@@ -14,40 +14,26 @@ export const MUTATION_Login_User = gql`
         code
         lastLogin
         createdDate
+        savedToken
       }
-      accountAppInfo {
-        _id
-        accountName
-        credentials {
-          buid
-          clientId
-          clientSecret
-          redirectUrl
-          version
-        }
-        customFields {
-          _id
-          fieldSystemName
-          fieldLabel
-          dataType
-          required
-          maxLength
-        }
-        domainName
-        totalCredits
-        totalCreditsUsedMonthly
+      credentials {
+        buid
+        clientId
+        clientSecret
+        redirectUrl
+        version
       }
     }
   }
 `;
 
 export const MUTATION_UpdateAppUsersCredits = gql`
-mutation MUTATION_UpdateAppUsersCredits {
-  updateAppUsersCredits {
-    creditsUsedMonthly
-    creditsUsedTotal
-    totalCreditsUsedMonthly
-    totalCredits
+  mutation MUTATION_UpdateAppUsersCredits {
+    updateAppUsersCredits {
+      creditsUsedMonthly
+      creditsUsedTotal
+      totalCreditsUsedMonthly
+      totalCredits
+    }
   }
-}
 `;
