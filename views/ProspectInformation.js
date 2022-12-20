@@ -15,7 +15,7 @@ export default function ProspectInformation({ navigation, route }) {
     console.log(taskId);
 
     const prospectInformation = await getInformation(taskId);
-    console.log(prospectInformation);
+    // console.log(prospectInformation);
   }
 
   return (
