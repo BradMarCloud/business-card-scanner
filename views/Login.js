@@ -141,16 +141,18 @@ export default function Login({ navigation }) {
         continueFunction={continueFunction}
       />
       <TextInput
+        defaultValue="brad+live@marcloudconsulting.com"
         style={styles.input}
         placeholder="Username"
-        value={userDetails.username || ""}
+        // value={userDetails.username || ""}
         onChangeText={(username) => setUserDetails({ ...userDetails, username: username })}
         autoCapitalize={false}
       />
       <TextInput
+        defaultValue="marcloud.lightning.force.com"
         style={styles.input}
         placeholder="Domain"
-        value={userDetails.domain || ""}
+        // value={userDetails.domain || ""}
         onChangeText={(domain) => setUserDetails({ ...userDetails, domain: domain })}
         autoCapitalize={false}
       />
